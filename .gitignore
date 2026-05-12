@@ -146,3 +146,17 @@ playwright/.cache/
 
 # custom helm values
 custom-values.yaml
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
+
+# Sensitive variable files
+*.auto.tfvars
