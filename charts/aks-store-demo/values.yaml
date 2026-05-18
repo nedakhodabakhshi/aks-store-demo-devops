@@ -37,7 +37,7 @@ orderService:
   queueTransport: ""
   image:
     repository: "acraksstoredemo12345.azurecr.io/order-service"
-    tag: "" # defaults to Chart.AppVersion
+    tag: "latest"
 
 makelineService:
   orderQueueUri: "amqp://rabbitmq:5672"
@@ -55,37 +55,37 @@ makelineService:
   orderDBPassword: ""
   image:
     repository: "acraksstoredemo12345.azurecr.io/makeline-service"
-    tag: "" # defaults to Chart.AppVersion
+    tag: "latest"
 
 productService:
   image:
     repository: "acraksstoredemo12345.azurecr.io/product-service"
-    tag: "" # defaults to Chart.AppVersion
+    tag: "latest"
 
 storeAdmin:
   image:
     repository: "acraksstoredemo12345.azurecr.io/store-admin"
-    tag: "" # defaults to Chart.AppVersion
+    tag: "latest"
   serviceType: LoadBalancer
 
 storeFront:
   image:
     repository: "acraksstoredemo12345.azurecr.io/store-front"
-    tag: "" # defaults to Chart.AppVersion
+    tag: "latest"
   serviceType: LoadBalancer
 
 virtualCustomer:
   create: true
   image:
     repository: "acraksstoredemo12345.azurecr.io/virtual-customer"
-    tag: "" # defaults to Chart.AppVersion
+    tag: "latest"
   ordersPerHour: 20
 
 virtualWorker:
   create: true
   image:
     repository: "acraksstoredemo12345.azurecr.io/virtual-worker"
-    tag: "" # defaults to Chart.AppVersion
+    tag: "latest"
   ordersPerHour: 10
 
 podAnnotations: {}
