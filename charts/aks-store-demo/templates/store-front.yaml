@@ -18,8 +18,8 @@ spec:
         - name: store-front
           image: {{ .Values.storeFront.image.repository }}:{{ .Values.storeFront.image.tag | default .Chart.AppVersion }}
           ports:
-           - containerPort: 8080
-             name: store-front
+            - containerPort: 8080
+              name: store-front
         resources:
           requests:
             cpu: 1m
