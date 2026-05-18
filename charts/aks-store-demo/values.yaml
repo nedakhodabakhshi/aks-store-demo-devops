@@ -25,7 +25,7 @@ aiService:
   openAiDalleModelName: ""
   azureOpenAiApiVersion: "2024-12-01-preview"
   image:
-    repository: "ghcr.io/azure-samples/aks-store-demo/ai-service"
+    repository: "acraksstoredemo12345.azurecr.io/ai-service"
     tag: "" # defaults to Chart.AppVersion
 
 orderService:
@@ -36,7 +36,7 @@ orderService:
   queueName: "orders"
   queueTransport: ""
   image:
-    repository: "ghcr.io/azure-samples/aks-store-demo/order-service"
+    repository: "acraksstoredemo12345.azurecr.io/order-service"
     tag: "" # defaults to Chart.AppVersion
 
 makelineService:
@@ -54,17 +54,17 @@ makelineService:
   orderDBUsername: ""
   orderDBPassword: ""
   image:
-    repository: "ghcr.io/azure-samples/aks-store-demo/makeline-service"
+    repository: "acraksstoredemo12345.azurecr.io/makeline-service"
     tag: "" # defaults to Chart.AppVersion
 
 productService:
   image:
-    repository: "ghcr.io/azure-samples/aks-store-demo/product-service"
+    repository: "acraksstoredemo12345.azurecr.io/product-service"
     tag: "" # defaults to Chart.AppVersion
 
 storeAdmin:
   image:
-    repository: "ghcr.io/azure-samples/aks-store-demo/store-admin"
+    repository: "acraksstoredemo12345.azurecr.io/store-admin"
     tag: "" # defaults to Chart.AppVersion
   serviceType: LoadBalancer
 
@@ -77,14 +77,14 @@ storeFront:
 virtualCustomer:
   create: true
   image:
-    repository: "ghcr.io/azure-samples/aks-store-demo/virtual-customer"
+    repository: "acraksstoredemo12345.azurecr.io/virtual-customer"
     tag: "" # defaults to Chart.AppVersion
   ordersPerHour: 20
 
 virtualWorker:
   create: true
   image:
-    repository: "ghcr.io/azure-samples/aks-store-demo/virtual-worker"
+    repository: "acraksstoredemo12345.azurecr.io/virtual-worker"
     tag: "" # defaults to Chart.AppVersion
   ordersPerHour: 10
 

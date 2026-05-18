@@ -5,57 +5,151 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  imageRepository: store-front
-  containerRegistry: acraksstoredemo12345.azurecr.io
-  dockerfilePath: src/store-front/Dockerfile
-  tag: $(Build.BuildId)
+  containerRegistry: acr-store-connection
+  acrLoginServer: acraksstoredemo12345.azurecr.io
+  tag: latest
 
 stages:
 
+
+# BUILD & PUSH STAGE
+
+
 - stage: Build
-  displayName: Build and Push Image
+  displayName: Build and Push Images
 
   jobs:
-  - job: Build
-    displayName: Build Docker Image
+  - job: BuildImages
+    displayName: Build All Images
 
     steps:
 
+    # AI SERVICE
     - task: Docker@2
-      displayName: Build and Push
+      displayName: Build and Push ai-service
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: acr-store-connection
+        repository: ai-service
+        dockerfile: src/ai-service/Dockerfile
+        containerRegistry: $(containerRegistry)
+        buildContext: src/ai-service
         tags: |
           $(tag)
+
+    # ORDER SERVICE
+    - task: Docker@2
+      displayName: Build and Push order-service
+      inputs:
+        command: buildAndPush
+        repository: order-service
+        dockerfile: src/order-service/Dockerfile
+        containerRegistry: $(containerRegistry)
+        buildContext: src/order-service
+        tags: |
+          $(tag)
+
+    # MAKELINE SERVICE
+    - task: Docker@2
+      displayName: Build and Push makeline-service
+      inputs:
+        command: buildAndPush
+        repository: makeline-service
+        dockerfile: src/makeline-service/Dockerfile
+        containerRegistry: $(containerRegistry)
+        buildContext: src/makeline-service
+        tags: |
+          $(tag)
+
+    # PRODUCT SERVICE
+    - task: Docker@2
+      displayName: Build and Push product-service
+      inputs:
+        command: buildAndPush
+        repository: product-service
+        dockerfile: src/product-service/Dockerfile
+        containerRegistry: $(containerRegistry)
+        buildContext: src/product-service
+        tags: |
+          $(tag)
+
+    # STORE-ADMIN
+    - task: Docker@2
+      displayName: Build and Push store-admin
+      inputs:
+        command: buildAndPush
+        repository: store-admin
+        dockerfile: src/store-admin/Dockerfile
+        containerRegistry: $(containerRegistry)
+        buildContext: src/store-admin
+        tags: |
+          $(tag)
+
+    # STORE-FRONT
+    - task: Docker@2
+      displayName: Build and Push store-front
+      inputs:
+        command: buildAndPush
+        repository: store-front
+        dockerfile: src/store-front/Dockerfile
+        containerRegistry: $(containerRegistry)
+        buildContext: src/store-front
+        tags: |
+          $(tag)
+
+    # VIRTUAL-CUSTOMER
+    - task: Docker@2
+      displayName: Build and Push virtual-customer
+      inputs:
+        command: buildAndPush
+        repository: virtual-customer
+        dockerfile: src/virtual-customer/Dockerfile
+        containerRegistry: $(containerRegistry)
+        buildContext: src/virtual-customer
+        tags: |
+          $(tag)
+
+    # VIRTUAL-WORKER
+    - task: Docker@2
+      displayName: Build and Push virtual-worker
+      inputs:
+        command: buildAndPush
+        repository: virtual-worker
+        dockerfile: src/virtual-worker/Dockerfile
+        containerRegistry: $(containerRegistry)
+        buildContext: src/virtual-worker
+        tags: |
+          $(tag)
+
+
+# DEPLOY STAGE
+
 
 - stage: Deploy
   displayName: Deploy to AKS
 
+  dependsOn: Build
+
   jobs:
   - job: Deploy
-    displayName: Deploy Application
+    displayName: Helm Deploy
 
     steps:
 
     - task: HelmInstaller@1
       inputs:
-        helmVersionToInstall: 'latest'
+        helmVersionToInstall: latest
 
     - task: HelmDeploy@0
-      displayName: Helm Deploy
+      displayName: Helm Upgrade
+
       inputs:
-        connectionType: 'Azure Resource Manager'
-        azureSubscription: 'aks-store-demo-connection'
-        azureResourceGroup: 'rg-aks-store-demo'
-        kubernetesCluster: 'aks-store-demo-cluster'
-        namespace: 'dev'
-        command: 'upgrade'
-        chartType: 'FilePath'
-        chartPath: 'charts/aks-store-demo'
-        releaseName: 'aks-store-demo'
-        overrideValues: |
-          storeFront.image.repository=acraksstoredemo12345.azurecr.io/store-front
-          storeFront.image.tag=$(Build.BuildId)
+        connectionType: Azure Resource Manager
+        azureSubscription: aks-store-demo-connection
+        azureResourceGroup: rg-aks-store-demo
+        kubernetesCluster: aks-store-demo-cluster
+        namespace: dev
+        command: upgrade
+        chartType: FilePath
+        chartPath: charts/aks-store-demo
+        releaseName: aks-store-demo
+        install: true
