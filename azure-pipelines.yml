@@ -7,7 +7,7 @@ pool:
 variables:
   imageRepository: store-front
   containerRegistry: acraksstoredemo12345.azurecr.io
-  dockerfilePath: Dockerfile
+  dockerfilePath: src/store-front/Dockerfile
   tag: $(Build.BuildId)
 
 stages:
