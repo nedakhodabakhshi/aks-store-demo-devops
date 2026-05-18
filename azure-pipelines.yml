@@ -40,14 +40,22 @@ stages:
 
     steps:
 
-    - task: KubernetesManifest@1
-      displayName: Deploy to AKS
+    - task: HelmInstaller@1
       inputs:
-        action: deploy
-        connectionType: azureResourceManager
-        azureSubscriptionConnection: aks-store-demo-connection
-        azureResourceGroup: rg-aks-store-demo
-        kubernetesCluster: aks-store-demo-cluster
-        namespace: dev
-        manifests: |
-          charts/aks-store-demo/templates/store-front.yaml
+        helmVersionToInstall: 'latest'
+
+    - task: HelmDeploy@0
+      displayName: Helm Deploy
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscription: 'aks-store-demo-connection'
+        azureResourceGroup: 'rg-aks-store-demo'
+        kubernetesCluster: 'aks-store-demo-cluster'
+        namespace: 'dev'
+        command: 'upgrade'
+        chartType: 'FilePath'
+        chartPath: 'charts/aks-store-demo'
+        releaseName: 'aks-store-demo'
+        overrideValues: |
+          storeFront.image.repository=acraksstoredemo12345.azurecr.io/store-front
+          storeFront.image.tag=$(Build.BuildId)
