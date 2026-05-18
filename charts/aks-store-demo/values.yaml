@@ -70,7 +70,7 @@ storeAdmin:
 
 storeFront:
   image:
-    repository: "ghcr.io/azure-samples/aks-store-demo/store-front"
+    repository: "acraksstoredemo12345.azurecr.io/store-front"
     tag: "" # defaults to Chart.AppVersion
   serviceType: LoadBalancer
 
