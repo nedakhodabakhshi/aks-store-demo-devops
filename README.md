@@ -54,6 +54,11 @@ The application contains the following services:
 
 ---
 
+
+![Docker Compose Running](screenshots/02-docker-compose-running.png)
+
+![Local Store Front](screenshots/03-store-front-local.png)
+
 # Local Development with Docker Compose
 
 The application was first tested locally using Docker Compose.
@@ -66,6 +71,9 @@ docker ps
 ```
 
 ---
+
+
+![Terraform Initial Files](screenshots/04-terraform-initial-files.png)
 
 # Terraform Infrastructure Deployment
 
@@ -101,6 +109,13 @@ terraform apply
 
 ---
 
+
+![AKS Cluster Nodes](screenshots/05-aks-cluster-nodes.png)
+
+![Kubernetes Namespaces](screenshots/06-kubernetes-namespaces.png)
+
+![AKS Running Pods](screenshots/07-aks-running-pods.png)
+
 # Azure Kubernetes Service (AKS)
 
 The Kubernetes cluster was deployed on Azure AKS.
@@ -123,6 +138,9 @@ kubectl get namespaces
 ```
 
 ---
+
+
+![ACR Images](screenshots/09-ecr-images.png)
 
 # Azure Container Registry (ACR)
 
@@ -199,6 +217,11 @@ helm upgrade --install aks-store-demo ./charts/aks-store-demo -n dev --create-na
 ```
 
 ---
+
+
+![Azure DevOps Pipeline](screenshots/16-azure-pipeline.png)
+
+![Azure DevOps Service Connection](screenshots/17-Service-connections.png)
 
 # Azure DevOps CI/CD Pipeline
 
@@ -334,6 +357,13 @@ screenshots/
 
 
 ---
+
+
+![AKS LoadBalancer Service](screenshots/08-aks-loadbalancer-service.png)
+
+![Ingress Controller External IP](screenshots/13-check-ingress-controller-external-ip.png)
+
+![Ingress Information](screenshots/15-ingress-info.png)
 
 # NGINX Ingress Controller + External Access
 
@@ -507,6 +537,9 @@ After Azure role propagation completed, the pods successfully pulled images from
 
 ---
 
+
+![Application UI](screenshots/01-UI.png)
+
 # Final Application Access
 
 The application became accessible externally through the Azure LoadBalancer public IP:
@@ -518,6 +551,19 @@ http://20.126.219.199
 
 
 ---
+
+
+![Install Argo CD](screenshots/18-install-argocd.png)
+
+![Argo CD Pods](screenshots/19-argo-pods.png)
+
+![Argo CD UI](screenshots/20-argo-ui.png)
+
+![Argo CD Application](screenshots/21-argo-cd-01.png)
+
+![Argo CD Synced](screenshots/22-argocd-synced.png)
+
+![Argo CD Resources](screenshots/23-argocd.png)
 
 # GitOps Deployment with Argo CD
 
