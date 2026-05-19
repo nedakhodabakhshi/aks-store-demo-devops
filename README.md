@@ -515,3 +515,279 @@ The application became accessible externally through the Azure LoadBalancer publ
 http://20.126.219.199
 ```
 
+
+
+---
+
+# GitOps Deployment with Argo CD
+
+Argo CD was added to the project to implement a production-style GitOps workflow on AKS.
+
+The deployment flow became:
+
+```text
+Developer Push → GitHub → Argo CD → AKS
+```
+
+Argo CD continuously monitors the GitHub repository and automatically synchronizes Kubernetes resources with the desired state stored in Git.
+
+---
+
+# Argo CD Features Used
+
+- GitOps workflow
+- Automatic Kubernetes synchronization
+- Self-healing deployments
+- Automatic resource pruning
+- Helm chart deployment support
+- Kubernetes application visualization
+- Continuous delivery on AKS
+
+---
+
+# Install Argo CD on AKS
+
+## Create Namespace
+
+```bash
+kubectl create namespace argocd
+```
+
+## Install Argo CD
+
+```bash
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+```
+
+## Verify Argo CD Pods
+
+```bash
+kubectl get pods -n argocd
+```
+
+---
+
+# Expose Argo CD with NGINX Ingress
+
+The project used the existing NGINX Ingress Controller to expose the Argo CD UI externally.
+
+## Create Ingress File
+
+File:
+
+```text
+k8s/argocd-ingress.yaml
+```
+
+YAML:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: argocd-ingress
+  namespace: argocd
+
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+
+spec:
+  ingressClassName: nginx
+
+  rules:
+    - host: argocd.51.105.239.44.nip.io
+
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+
+            backend:
+              service:
+                name: argocd-server
+
+                port:
+                  number: 443
+```
+
+## Apply Argo CD Ingress
+
+```bash
+kubectl apply -f k8s/argocd-ingress.yaml
+```
+
+## Verify Ingress
+
+```bash
+kubectl get ingress -n argocd
+```
+
+---
+
+# Access Argo CD UI
+
+Argo CD became accessible through:
+
+```text
+https://argocd.51.105.239.44.nip.io
+```
+
+---
+
+# Get Argo CD Admin Password
+
+Default username:
+
+```text
+admin
+```
+
+Get the initial admin password:
+
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret \
+-o jsonpath="{.data.password}" | base64 -d
+```
+
+---
+
+# Create Argo CD Application
+
+The AKS Store Demo Helm chart was connected directly to Argo CD.
+
+## Repository Configuration
+
+- Repository URL:
+
+```text
+https://github.com/nedakhodabakhshi/aks-store-demo-devops.git
+```
+
+- Git Revision:
+
+```text
+main
+```
+
+- Helm Chart Path:
+
+```text
+charts/aks-store-demo
+```
+
+- Target Namespace:
+
+```text
+dev
+```
+
+---
+
+# Argo CD Synchronization
+
+The application was synchronized manually for the first deployment.
+
+After synchronization the application status became:
+
+- Healthy
+- Synced
+
+Argo CD successfully deployed and managed all Kubernetes resources from the Git repository.
+
+---
+
+# Enable Auto Sync + Self Healing
+
+Automatic synchronization and self-healing were enabled to create a fully automated GitOps workflow.
+
+## Enable Auto Sync from UI
+
+The following options were enabled:
+
+- Enable Auto-Sync
+- Prune Resources
+- Self Heal
+
+---
+
+# Enable Auto Sync using kubectl
+
+```bash
+kubectl patch application aks-store-demo \
+-n argocd \
+--type merge \
+-p '{"spec":{"syncPolicy":{"automated":{"prune":true,"selfHeal":true}}}}'
+```
+
+---
+
+# Verify Auto Sync Configuration
+
+```bash
+kubectl get application aks-store-demo -n argocd -o yaml
+```
+
+Expected output:
+
+```yaml
+syncPolicy:
+  automated:
+    prune: true
+    selfHeal: true
+```
+
+---
+
+# GitOps Workflow Result
+
+After enabling Auto Sync:
+
+```text
+git push
+    ↓
+Argo CD detects changes
+    ↓
+AKS deployment updates automatically
+```
+
+The Kubernetes cluster state is now continuously synchronized with the GitHub repository.
+
+---
+
+# Argo CD Self-Healing Test
+
+A deployment was intentionally scaled down to verify self-healing.
+
+## Scale Deployment to Zero
+
+```bash
+kubectl scale deployment store-front \
+--replicas=0 \
+-n dev
+```
+
+## Verify Pods
+
+```bash
+kubectl get pods -n dev
+```
+
+Argo CD automatically detected drift and restored the deployment state from Git.
+
+---
+
+# Final GitOps Architecture
+
+The final production-style deployment workflow includes:
+
+- Terraform Infrastructure Provisioning
+- AKS Kubernetes Cluster
+- Azure Container Registry
+- Azure DevOps CI Pipeline
+- Helm Deployments
+- NGINX Ingress Controller
+- Argo CD GitOps Continuous Delivery
+- Automatic Kubernetes Synchronization
+- Self-Healing Kubernetes Deployments
+
