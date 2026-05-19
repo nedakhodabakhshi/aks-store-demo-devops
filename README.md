@@ -116,6 +116,8 @@ The Kubernetes cluster was deployed on Azure AKS.
 ## Verify AKS Cluster
 
 ```bash
+
+az aks get-credentials --resource-group rg-aks-store-demo --name aks-store-demo-cluster --overwrite-existing
 kubectl get nodes
 kubectl get namespaces
 ```
